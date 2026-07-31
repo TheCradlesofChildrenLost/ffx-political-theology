@@ -17,23 +17,38 @@ document.querySelectorAll('.sound-threshold').forEach(function(card){
   button.addEventListener('click',function(){
     if(card.dataset.loaded==='true')return;
     if(activeSoundCard&&activeSoundCard!==card)submergeSound(activeSoundCard,false);
-    var frame=document.createElement('iframe');
     var close=document.createElement('button');
-    frame.src='https://music.163.com/outchain/player?type=2&id='+encodeURIComponent(card.dataset.soundId)+'&auto=1&height=66';
-    frame.title=card.querySelector('h3').textContent+'——网易云音乐外链播放器';
-    frame.loading='eager';
-    frame.allow='autoplay; encrypted-media; fullscreen';
-    frame.referrerPolicy='strict-origin-when-cross-origin';
     close.type='button';
     close.className='sound-submerge';
     close.textContent='沉回水下';
     close.addEventListener('click',function(){submergeSound(card,true);});
-    player.appendChild(frame);
     if(mobileSoundPlayback){
+      var audio=document.createElement('audio');
       var hint=document.createElement('p');
+      audio.controls=true;
+      audio.preload='metadata';
+      audio.playsInline=true;
+      audio.src='https://music.163.com/song/media/outer/url?id='+encodeURIComponent(card.dataset.soundId)+'.mp3';
+      audio.setAttribute('aria-label',card.querySelector('h3').textContent+'——网易云音乐原生音频播放器');
       hint.className='sound-mobile-hint';
-      hint.textContent='已由本次点击请求播放；若浏览器仍拦截声音，请点播放器内的播放键。';
-      player.appendChild(hint);
+      hint.textContent='手机端使用原生播放器；若声音未自动开始，请点播放键。';
+      audio.addEventListener('error',function(){
+        hint.classList.add('is-error');
+        hint.textContent='网易云暂未返回这首音频；可稍后重新浮出水面。';
+      });
+      player.append(audio,hint);
+      var playAttempt=audio.play();
+      if(playAttempt&&typeof playAttempt.catch==='function'){
+        playAttempt.catch(function(){hint.textContent='浏览器等待你的确认，请点上方播放键。';});
+      }
+    }else{
+      var frame=document.createElement('iframe');
+      frame.src='https://music.163.com/outchain/player?type=2&id='+encodeURIComponent(card.dataset.soundId)+'&auto=1&height=66';
+      frame.title=card.querySelector('h3').textContent+'——网易云音乐外链播放器';
+      frame.loading='eager';
+      frame.allow='autoplay; encrypted-media; fullscreen';
+      frame.referrerPolicy='strict-origin-when-cross-origin';
+      player.appendChild(frame);
     }
     player.appendChild(close);
     card.dataset.loaded='true';
