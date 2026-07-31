@@ -704,10 +704,10 @@ document.querySelectorAll('.sound-threshold').forEach(function(card){
     if(activeSoundCard&&activeSoundCard!==card)submergeSound(activeSoundCard,false);
     var frame=document.createElement('iframe');
     var close=document.createElement('button');
-    frame.src='https://music.163.com/outchain/player?type=2&id='+encodeURIComponent(card.dataset.soundId)+'&auto=0&height=66';
+    frame.src='https://music.163.com/outchain/player?type=2&id='+encodeURIComponent(card.dataset.soundId)+'&auto=1&height=66';
     frame.title=card.querySelector('h3').textContent+'——网易云音乐外链播放器';
     frame.loading='lazy';
-    frame.allow='encrypted-media';
+    frame.allow='autoplay; encrypted-media';
     close.type='button';
     close.className='sound-submerge';
     close.textContent='沉回水下';
