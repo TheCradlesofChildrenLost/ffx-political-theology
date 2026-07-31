@@ -3458,6 +3458,20 @@ input:focus-visible {
 
 /* Platform rendering safeguards: keep the atmosphere without forcing costly
    full-screen compositing on Android or placing scanlines over Windows text. */
+html.reduced-effects .y2k-pilgrimage .dream-veil::before,
+html.reduced-effects .y2k-pilgrimage .dream-veil::after,
+html.reduced-effects .y2k-pilgrimage .moon-ripples::before,
+html.reduced-effects .y2k-pilgrimage .moon-ripples::after {
+  animation: none !important;
+}
+
+html.reduced-effects .y2k-pilgrimage .masthead,
+html.reduced-effects .y2k-pilgrimage .journey-status,
+html.reduced-effects .fantasy-ruins .hero-actions button,
+html.reduced-effects .drawer-scrim {
+  backdrop-filter: none;
+}
+
 @media (hover: none) and (pointer: coarse) {
   .y2k-pilgrimage::before,
   .y2k-pilgrimage .moon-ripples,

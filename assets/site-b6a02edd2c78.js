@@ -12,6 +12,12 @@ function requestSoundPlay(audio,status,fallback){
 function submergeSound(card,restoreFocus){
   var player=card.querySelector('.sound-player');
   var button=card.querySelector('.sound-load');
+  var audio=player.querySelector('audio');
+  if(audio){
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+  }
   player.replaceChildren();
   card.dataset.loaded='false';
   card.dataset.sequenceAdvanced='false';
