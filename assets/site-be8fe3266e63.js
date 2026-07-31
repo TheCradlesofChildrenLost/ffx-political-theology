@@ -19,10 +19,11 @@ document.querySelectorAll('.sound-threshold').forEach(function(card){
     if(activeSoundCard&&activeSoundCard!==card)submergeSound(activeSoundCard,false);
     var frame=document.createElement('iframe');
     var close=document.createElement('button');
-    frame.src='https://music.163.com/outchain/player?type=2&id='+encodeURIComponent(card.dataset.soundId)+'&auto='+(mobileSoundPlayback?'0':'1')+'&height=66';
+    frame.src='https://music.163.com/outchain/player?type=2&id='+encodeURIComponent(card.dataset.soundId)+'&auto=1&height=66';
     frame.title=card.querySelector('h3').textContent+'——网易云音乐外链播放器';
-    frame.loading='lazy';
-    frame.allow='autoplay; encrypted-media';
+    frame.loading='eager';
+    frame.allow='autoplay; encrypted-media; fullscreen';
+    frame.referrerPolicy='strict-origin-when-cross-origin';
     close.type='button';
     close.className='sound-submerge';
     close.textContent='沉回水下';
@@ -31,7 +32,7 @@ document.querySelectorAll('.sound-threshold').forEach(function(card){
     if(mobileSoundPlayback){
       var hint=document.createElement('p');
       hint.className='sound-mobile-hint';
-      hint.textContent='手机浏览器会阻止带声音的自动播放；请在上方播放器中再点一次播放。';
+      hint.textContent='已由本次点击请求播放；若浏览器仍拦截声音，请点播放器内的播放键。';
       player.appendChild(hint);
     }
     player.appendChild(close);
@@ -39,6 +40,6 @@ document.querySelectorAll('.sound-threshold').forEach(function(card){
     card.classList.remove('has-echo');
     activeSoundCard=card;
     player.setAttribute('tabindex','-1');
-    player.focus({preventScroll:true});
+    if(!mobileSoundPlayback)player.focus({preventScroll:true});
   });
 });
