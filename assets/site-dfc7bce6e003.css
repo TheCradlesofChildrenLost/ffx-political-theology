@@ -3991,3 +3991,107 @@ html.platform-windows .y2k-pilgrimage .article-body button {
     gap: 0.18rem;
   }
 }
+
+
+
+/* note-popover:start */
+.note-popover {
+  position: fixed;
+  z-index: 120;
+  width: min(27rem, calc(100vw - 2rem));
+  max-height: min(26rem, calc(100vh - 2rem));
+  padding: 1rem 1.05rem 1.1rem;
+  overflow: auto;
+  color: rgba(232, 249, 246, 0.94);
+  background:
+    linear-gradient(180deg, rgba(18, 73, 79, 0.22), transparent 32%),
+    rgba(5, 24, 33, 0.96);
+  border: 1px solid rgba(114, 238, 224, 0.42);
+  border-radius: 0.3rem 1.1rem 0.45rem 0.95rem;
+  box-shadow: 0 1.2rem 3.4rem rgba(0, 7, 14, 0.58), inset 0 0 2.2rem rgba(114, 238, 224, 0.05);
+  backdrop-filter: blur(14px) saturate(1.1);
+  opacity: 0;
+  transform: translateY(0.55rem) scale(0.98);
+  transform-origin: var(--note-origin-x, 50%) var(--note-origin-y, 0%);
+  transition: opacity 180ms ease, transform 220ms ease;
+}
+
+.note-popover.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.note-popover::before {
+  content: "RECOVERED FOOTNOTE / 水下残卷";
+  display: block;
+  padding: 0 2.7rem 0.65rem 0;
+  color: #f0cd79;
+  font: 800 0.58rem/1.3 var(--sans, sans-serif);
+  letter-spacing: 0.14em;
+}
+
+.note-popover-title {
+  margin: 0 2.8rem 0.65rem 0;
+  color: #bceee3;
+  font: 700 0.78rem/1.4 var(--sans, sans-serif);
+  letter-spacing: 0.1em;
+}
+
+.note-popover-copy {
+  font: 400 0.88rem/1.85 var(--serif, serif);
+}
+
+.note-popover-copy a {
+  color: #f0cd79;
+}
+
+.note-popover-close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.7rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  color: #bceee3;
+  background: rgba(4, 25, 33, 0.66);
+  border: 1px solid rgba(114, 238, 224, 0.32);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.note-popover-close:hover,
+.note-popover-close:focus-visible {
+  color: #071b22;
+  background: #bceee3;
+  border-color: #e8fff6;
+}
+
+.note-mark[aria-expanded="true"] {
+  filter: saturate(1.25) brightness(1.18);
+  box-shadow: 0 0 0 0.25rem rgba(240, 205, 121, 0.18), 0 0 1rem rgba(236, 106, 85, 0.52);
+}
+
+@media (max-width: 720px) {
+  .note-popover {
+    inset: auto 0.75rem 0.75rem !important;
+    width: auto;
+    max-height: min(62vh, 32rem);
+    padding: 1.05rem 1rem 1.15rem;
+    border-radius: 1rem 1rem 0.45rem 0.45rem;
+    transform-origin: 50% 100%;
+    transform: translateY(1rem);
+  }
+
+  .note-popover.is-open { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note-popover { transition: opacity 80ms linear; }
+}
+/* note-popover:end */
+
+
+
