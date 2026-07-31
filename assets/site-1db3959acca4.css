@@ -1748,6 +1748,7 @@ input:focus-visible {
 .y2k-pilgrimage .hero {
   min-height: 100svh;
   background:
+    linear-gradient(180deg, transparent 0 60%, rgba(3, 18, 25, 0.5) 82%, #030b11 100%),
     radial-gradient(ellipse at 57% 55%, rgba(61, 155, 157, 0.09), transparent 44%),
     linear-gradient(90deg, rgba(1, 10, 16, 0.9) 0%, rgba(3, 16, 23, 0.7) 35%, rgba(5, 24, 31, 0.24) 58%, rgba(5, 24, 31, 0.13) 78%, rgba(2, 11, 17, 0.5) 100%),
     linear-gradient(180deg, rgba(4, 24, 31, 0.08), rgba(8, 35, 40, 0.22) 55%, #031219 100%),
@@ -1901,12 +1902,42 @@ input:focus-visible {
 }
 
 .y2k-pilgrimage .hero-water {
-  bottom: -5.5rem;
-  height: 21rem;
+  bottom: -8rem;
+  height: 29rem;
+  opacity: 0.72;
   background:
-    linear-gradient(180deg, transparent 0 8%, rgba(5, 28, 35, 0.18) 42%, rgba(3, 18, 25, 0.82) 100%),
-    linear-gradient(90deg, transparent, rgba(233, 139, 115, 0.16) 36%, rgba(240, 205, 121, 0.16) 51%, rgba(114, 238, 224, 0.16) 68%, transparent),
-    repeating-radial-gradient(ellipse at center, transparent 0 20px, rgba(114, 238, 224, 0.22) 21px 22px);
+    linear-gradient(180deg, transparent 0 16%, rgba(5, 28, 35, 0.12) 42%, rgba(3, 18, 25, 0.72) 100%),
+    linear-gradient(90deg, transparent 4%, rgba(233, 139, 115, 0.12) 34%, rgba(240, 205, 121, 0.13) 51%, rgba(114, 238, 224, 0.12) 69%, transparent 96%),
+    repeating-radial-gradient(ellipse at 52% 58%, transparent 0 27px, rgba(114, 238, 224, 0.16) 28px 29px);
+  mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.2) 14%, black 34%, black 70%, transparent 100%);
+  filter: blur(0.35px);
+}
+
+.y2k-pilgrimage .reading-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.y2k-pilgrimage .reading-shell::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  left: -12vw;
+  right: -12vw;
+  top: -10rem;
+  height: 22rem;
+  opacity: 0.34;
+  background:
+    linear-gradient(180deg, rgba(4, 25, 32, 0.52), rgba(4, 25, 32, 0.16) 48%, transparent 100%),
+    repeating-radial-gradient(ellipse at 52% 4%, transparent 0 29px, rgba(114, 238, 224, 0.13) 30px 31px);
+  mask-image: linear-gradient(to bottom, transparent 0, black 18%, rgba(0, 0, 0, 0.72) 48%, transparent 100%);
+  filter: blur(0.45px);
+}
+
+.y2k-pilgrimage .reading-shell > * {
+  position: relative;
+  z-index: 1;
 }
 
 .y2k-pilgrimage .ruin-pillar {
