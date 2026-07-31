@@ -1537,7 +1537,6 @@ input:focus-visible {
   --island-coral: #e98b73;
   --island-sun: #f0cd79;
   --woven-dark: #071b22;
-  --reader-size: 1.08rem;
   --pilgrimage-depth: 0vh;
   --dream-veil-opacity: 0.42;
   --dream-current: 0px;
@@ -2094,7 +2093,7 @@ input:focus-visible {
 }
 
 .y2k-pilgrimage .article-body {
-  font-size: var(--reader-size);
+  font-size: 1.08rem;
 }
 
 .y2k-pilgrimage .article-body > p {
@@ -2262,13 +2261,7 @@ input:focus-visible {
   opacity: 0;
 }
 
-.y2k-pilgrimage.reader-small {
-  --reader-size: 0.98rem;
-}
 
-.y2k-pilgrimage.reader-large {
-  --reader-size: 1.2rem;
-}
 
 .y2k-pilgrimage .article-body > h2 {
   border:
@@ -3337,10 +3330,6 @@ input:focus-visible {
     white-space: nowrap;
   }
 
-  .y2k-pilgrimage .reader-controls button[data-reader-size] {
-    display: none;
-  }
-
   .y2k-pilgrimage .reader-controls button:last-child {
     margin-left: 0;
   }
@@ -4093,5 +4082,89 @@ html.platform-windows .y2k-pilgrimage .article-body button {
 }
 /* note-popover:end */
 
+
+
+
+/* reading-transition:start */
+.y2k-pilgrimage .pilgrimage-threshold {
+  position: relative;
+  z-index: 5;
+  height: clamp(8rem, 14vh, 10.5rem);
+  margin: clamp(-5.5rem, -7vh, -4rem) 0 clamp(-3.75rem, -5vh, -2.5rem);
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(4, 24, 31, 0.3) 28%, rgba(3, 16, 23, 0.88) 72%, transparent 100%);
+}
+
+.y2k-pilgrimage .pilgrimage-threshold::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8.6rem;
+  width: min(92vw, 76rem);
+  height: 17rem;
+  border: 1px solid rgba(189, 245, 232, 0.25);
+  border-radius: 50%;
+  transform: translateX(-50%) scaleY(0.28);
+  box-shadow:
+    0 0 0 2.8rem rgba(130, 226, 218, 0.08),
+    0 0 0 5.6rem rgba(238, 197, 125, 0.045),
+    0 0 0 8.4rem rgba(130, 226, 218, 0.025);
+  opacity: 0.86;
+}
+
+.y2k-pilgrimage .pilgrimage-threshold::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: min(18vw, 8rem);
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, transparent, rgba(224, 251, 241, 0.16) 48%, rgba(124, 224, 216, 0.035));
+  clip-path: polygon(48% 0, 52% 0, 88% 100%, 12% 100%);
+}
+
+.y2k-pilgrimage .pilgrimage-threshold span {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 0.48rem;
+  height: 0.48rem;
+  border: 1px solid rgba(233, 255, 248, 0.72);
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow: 0 0 1.25rem rgba(132, 238, 224, 0.62);
+}
+
+.y2k-pilgrimage .reading-shell {
+  padding-top: 4.75rem;
+}
+
+@media (max-width: 760px) {
+  .y2k-pilgrimage .pilgrimage-threshold {
+    height: 7rem;
+    margin: -3.6rem 0 -2.35rem;
+  }
+
+  .y2k-pilgrimage .pilgrimage-threshold::before {
+    bottom: -7.2rem;
+    width: 120vw;
+    height: 14rem;
+  }
+
+  .y2k-pilgrimage .reading-shell {
+    padding-top: 3.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .y2k-pilgrimage .pilgrimage-threshold,
+  .y2k-pilgrimage .pilgrimage-threshold::before,
+  .y2k-pilgrimage .pilgrimage-threshold::after {
+    animation: none;
+  }
+}
+/* reading-transition:end */
 
 

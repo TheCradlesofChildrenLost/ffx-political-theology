@@ -441,11 +441,7 @@ document.addEventListener("click", event => {
     openAtlas();
   }
   else if (event.target.closest("[data-close], [data-close-oneiric]") || event.target === scrim) closePanels();
-  else if (event.target.closest("[data-reader-size]")) {
-    const size = event.target.closest("[data-reader-size]").dataset.readerSize;
-    document.body.classList.toggle("reader-small", size === "small");
-    document.body.classList.toggle("reader-large", size === "large");
-  } else if (event.target.closest("[data-focus-mode]")) {
+  else if (event.target.closest("[data-focus-mode]")) {
     const control = event.target.closest("[data-focus-mode]");
     const active = document.body.classList.toggle("traversing-fantasy");
     control.textContent = active ? "返回水面" : "穿越幻想";
