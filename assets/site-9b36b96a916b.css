@@ -3419,8 +3419,40 @@ input:focus-visible {
     font-size: 0.68rem;
   }
 
-  .y2k-pilgrimage .reader-controls button[data-focus-mode] {
+  .y2k-pilgrimage .journey-place {
     display: none;
+  }
+
+  .y2k-pilgrimage .reader-controls {
+    grid-column: 2 / 4;
+    justify-self: end;
+  }
+
+  .y2k-pilgrimage .reader-controls button[data-focus-mode],
+  .y2k-pilgrimage .reader-controls button[data-still-water] {
+    display: inline-grid;
+    min-width: 3.15rem;
+    padding-inline: 0.42rem;
+    place-items: center;
+    font-size: 0;
+  }
+
+  .y2k-pilgrimage .reader-controls button[data-focus-mode]::before {
+    content: "穿越";
+    font-size: 0.68rem;
+  }
+
+  .y2k-pilgrimage .reader-controls button[data-focus-mode][aria-pressed="true"]::before {
+    content: "水面";
+  }
+
+  .y2k-pilgrimage .reader-controls button[data-still-water]::before {
+    content: "静水";
+    font-size: 0.68rem;
+  }
+
+  .y2k-pilgrimage .reader-controls button[data-still-water][aria-pressed="true"]::before {
+    content: "潮汐";
   }
 }
 

@@ -442,6 +442,7 @@ document.addEventListener("click", event => {
     const active = document.body.classList.toggle("traversing-fantasy");
     control.textContent = active ? "返回水面" : "穿越幻想";
     control.setAttribute("aria-pressed", String(active));
+    control.setAttribute("aria-label", active ? "返回水面，恢复幻想阅读" : "穿越幻想，显示页面安排的观看位置");
     if (active) {
       document.querySelectorAll("figure[data-demand-threshold]").forEach(figure => {
         figure.classList.add("demand-ready");
@@ -457,6 +458,7 @@ document.addEventListener("click", event => {
     const active = document.body.classList.toggle("still-water");
     control.textContent = active ? "恢复潮汐" : "静水阅读";
     control.setAttribute("aria-pressed", String(active));
+    control.setAttribute("aria-label", active ? "恢复潮汐与装饰动画" : "静水阅读，暂停装饰动画");
   }
 });
 
