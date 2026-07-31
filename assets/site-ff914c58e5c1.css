@@ -3424,6 +3424,133 @@ input:focus-visible {
   }
 }
 
+/* Platform rendering safeguards: keep the atmosphere without forcing costly
+   full-screen compositing on Android or placing scanlines over Windows text. */
+@media (hover: none) and (pointer: coarse) {
+  .y2k-pilgrimage::before,
+  .y2k-pilgrimage .moon-ripples,
+  .y2k-pilgrimage .dream-veil {
+    position: absolute;
+    bottom: auto;
+    height: 100svh;
+    mix-blend-mode: normal;
+  }
+
+  .y2k-pilgrimage::before {
+    opacity: 0.025;
+  }
+
+  .y2k-pilgrimage .dream-veil {
+    opacity: 0.14;
+  }
+
+  .y2k-pilgrimage .dream-veil::before,
+  .y2k-pilgrimage .dream-veil::after,
+  .y2k-pilgrimage .moon-ripples::before,
+  .y2k-pilgrimage .moon-ripples::after,
+  .y2k-pilgrimage .pyre-current::before,
+  .y2k-pilgrimage .pyre-current i,
+  .y2k-pilgrimage .pyre-current i::before,
+  .y2k-pilgrimage .article-body > p.pyre-bridge::before,
+  .y2k-pilgrimage .water-reflection::before,
+  .y2k-pilgrimage .water-reflection::after,
+  .sound-threshold::before {
+    animation: none !important;
+  }
+
+  .y2k-pilgrimage .tidal-mirror,
+  .y2k-pilgrimage .wandering-pyreflies {
+    display: none !important;
+  }
+
+  .y2k-pilgrimage .masthead,
+  .y2k-pilgrimage .journey-status,
+  .fantasy-ruins .hero-actions button,
+  .drawer-scrim {
+    backdrop-filter: none;
+  }
+
+  .article-body figure,
+  .water-reflection {
+    content-visibility: visible;
+    contain-intrinsic-size: none;
+  }
+}
+
+html.platform-android .y2k-pilgrimage::before,
+html.platform-android .y2k-pilgrimage .moon-ripples,
+html.platform-android .y2k-pilgrimage .dream-veil {
+  position: absolute;
+  bottom: auto;
+  height: 100svh;
+  mix-blend-mode: normal;
+}
+
+html.platform-android .y2k-pilgrimage::before {
+  opacity: 0.025;
+}
+
+html.platform-android .y2k-pilgrimage .dream-veil {
+  opacity: 0.14;
+  transition: none;
+}
+
+html.platform-android .y2k-pilgrimage .moon-ripples {
+  transform: none;
+  transition: none;
+}
+
+html.platform-android .y2k-pilgrimage .dream-veil::before,
+html.platform-android .y2k-pilgrimage .dream-veil::after,
+html.platform-android .y2k-pilgrimage .moon-ripples::before,
+html.platform-android .y2k-pilgrimage .moon-ripples::after {
+  animation: none !important;
+}
+
+html.platform-android .y2k-pilgrimage .tidal-mirror,
+html.platform-android .y2k-pilgrimage .wandering-pyreflies {
+  display: none !important;
+}
+
+html.platform-android .article-body figure,
+html.platform-android .water-reflection {
+  content-visibility: visible;
+  contain-intrinsic-size: none;
+}
+
+html.platform-android .y2k-pilgrimage .masthead,
+html.platform-android .y2k-pilgrimage .journey-status,
+html.platform-android .fantasy-ruins .hero-actions button,
+html.platform-android .drawer-scrim {
+  backdrop-filter: none;
+}
+
+html.platform-windows body {
+  --serif: "Microsoft YaHei UI", "Microsoft YaHei", "Noto Serif SC", "Source Han Serif SC", serif;
+  --sans: "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  text-rendering: auto;
+}
+
+html.platform-windows .y2k-pilgrimage::before {
+  opacity: 0.025;
+  mix-blend-mode: normal;
+}
+
+html.platform-windows .y2k-pilgrimage .article-body > p.dream-text {
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+html.platform-windows .y2k-pilgrimage.dream-active .article-body > p.dream-text:not(.is-present) {
+  opacity: 0.72;
+}
+
+html.platform-windows .y2k-pilgrimage .article-body,
+html.platform-windows .y2k-pilgrimage .article-body button {
+  -webkit-font-smoothing: auto;
+  font-synthesis: none;
+}
+
 @media print {
   .y2k-pilgrimage::before,
   .y2k-pilgrimage .journey-status,
