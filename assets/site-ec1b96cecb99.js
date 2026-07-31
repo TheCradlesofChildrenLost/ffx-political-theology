@@ -19,22 +19,164 @@ const symptomArchive = new Map();
 const motifArchive = new Map();
 const captionStates = new WeakMap();
 let lastPanelTrigger = null;
-const motifMeanings = {
-  "水": "它既承载出生、战斗与送行，也把倒影和深处同时交给观看者。",
-  "月": "月光不是自足的光；它以反射、周期与借来的记忆照亮史匹拉。",
-  "废墟": "废墟保存不可逆性，使城市无法被复原为没有发生过灾难的完整现在。",
-  "寺院": "寺院既是神圣内部，也是把正统拆成插槽、通路和合法操作的制度机器。",
-  "幻光虫": "幻光虫游移于灵魂、记忆、数据与未完成关系之间，拒绝单一象征。",
-  "歌声": "歌声的意义随发声者、场所与历史关系改变，不属于任何永恒的解释者。"
+const narrativePhaseLabels = {
+  abstract: "尚未分化",
+  prologue: "序曲 · 未知",
+  pilgrimage: "行路 · 信念",
+  return: "回返 · 揭露",
+  release: "放下 · 中断",
+  translation: "转译 · 余义",
+  epilogue: "尾声 · 哀悼"
 };
-const symptomRevisions = {
-  "希望": "后来的希望使这里的安慰显出制度价格：它安抚恐惧，也把行动资格交给既定牺牲者。",
-  "安宁": "后来重返此处，短暂平静不再只是奖赏，也成为循环能够继续取得同意的条件。",
-  "牺牲": "后来出现的牺牲把这一次死亡从命运改写为制度选择，责任因而可以被追问。",
-  "梦": "后来关于梦城的知识使这里的梦不再只是愿望，而显出维持愿望所需的他者劳动。",
-  "辛": "后来杰克特与耶朋·咒的揭示，使这里的敌人同时成为父亲、铠甲与重复装置。",
-  "父亲": "后来重返这个称呼，私人怨恨已经被世界灾难重新占据，胜利不能再等同于取代父亲。",
-  "送行": "后来发生的送行使这里的仪式不再只是安置亡魂，也成为解除死者统治权的政治行动。"
+const symptomReadings = {
+  "希望": {
+    core: "希望不是从真实走向虚假的直线；它先使人行动，继而被制度征用，最后才可能脱离献祭而重新命名。",
+    readings: {
+      abstract: ["尚未分化的许诺", "希望首先以继续阅读、继续行路的开放性出现，代价尚未进入视野。"],
+      prologue: ["灾后仍可讲述", "营火旁的讲述让毁灭暂时拥有方向，却还不知道这个方向通向谁的死亡。"],
+      pilgrimage: ["共同体的情感资源", "希望支持朝圣者与沿途居民继续生活，也把他们的恐惧集中到召唤士身上。"],
+      return: ["制度化的安慰", "真相揭露后，希望显出政治价格：它让牺牲看起来既必要又自愿。"],
+      release: ["拒绝献祭的行动", "希望不再保证无损结局，而成为在没有神圣保证时仍然中断循环的勇气。"],
+      translation: ["不能完全对译的承诺", "不同语言把希望分配为许诺、期待或慰藉，暴露共同体对未来的不同语法。"],
+      epilogue: ["带着失去继续生活", "希望终于不以复活死者为条件，而以记住、重建和允许离别并存。"]
+    }
+  },
+  "安宁": {
+    core: "安宁既是灾难间歇的真实 relief，也是循环借以获得同意的政治时间。",
+    readings: {
+      abstract: ["被渴望的静止", "安宁尚像灾难之外的纯粹休息，没有显露它与下一次毁灭的关系。"],
+      prologue: ["毁灭后的停顿", "静水与营火把灾难隔在叙述之外，让人误以为暂停就是终止。"],
+      pilgrimage: ["朝圣许诺的奖赏", "沿途共同体确实需要喘息，但这份需要被系在召唤士必死的路线终点。"],
+      return: ["循环的合法性", "安宁节的短期有效性不再证明制度正确，反而解释制度为何能够长期延续。"],
+      release: ["从延期走向中断", "真正的安宁不再是等待辛归来，而是取消让归来成为必然的装置。"],
+      translation: ["时间感的分歧", "calm、凪与安宁各自强调静止、无风或秩序，使灾后时间获得不同伦理重音。"],
+      epilogue: ["不再由牺牲购买的日常", "安宁变为可被生活填充的时间，而不是纪念下一位救世者的空档。"]
+    }
+  },
+  "牺牲": {
+    core: "牺牲从来不只是个人品德；它涉及谁命名必要、谁承担代价、谁从死亡中获得秩序。",
+    readings: {
+      abstract: ["崇高代价", "牺牲仍容易被读成英雄叙事中不可避免的损失。"],
+      prologue: ["尚未说出的终点", "旅程已经被死亡规定，却通过倒叙把代价延迟到读者能够承受的时刻。"],
+      pilgrimage: ["被爱的自我奉献", "尤娜的选择是真实的，但共同体只允许她在预设的死亡形式中证明爱。"],
+      return: ["制度生产的死亡", "当究极召唤的循环被揭露，牺牲由命运重新显现为可以追责的制度选择。"],
+      release: ["拒绝制造下一位死者", "中断不要求更纯洁的牺牲，而要求放弃以他人死亡换取确定性的欲望。"],
+      translation: ["词语携带的神学差", "sacrifice、犠牲与牺牲把祭献、受害和主动奉献缠在同一个词场中。"],
+      epilogue: ["不可兑换的失去", "提达的消失不是为旧制度补账；失去被承认，却不再兑换新的牺牲资格。"]
+    }
+  },
+  "梦": {
+    core: "梦既给予欲望以可居住的形状，也可能把保存变成拒绝历史终结的无限劳动。",
+    readings: {
+      abstract: ["愿望的容器", "梦先意味着另一种生活仍可想象，维持它的物质与劳动尚不可见。"],
+      prologue: ["倒叙的故乡", "梦把已经失去的城市保存为仍在发声的第一人称记忆。"],
+      pilgrimage: ["朝圣者的私人未来", "人物各自把尚未实现的生活投向道路尽头，却不知道终点已被制度封闭。"],
+      return: ["不能停机的档案", "梦城真相使愿望显出基础设施：祈之子的持续召唤替完美故乡支付时间。"],
+      release: ["允许梦结束", "醒来不是揭穿虚假，而是承认真实关系也不能要求他者永远维持自身存在。"],
+      translation: ["版本间移动的幻想", "梦在语言与声音轨之间改变情感温度，任何版本都不能恢复一个无媒介的原梦。"],
+      epilogue: ["可被记住而不必复原", "消逝的梦仍能参与未来，但不再以复制原样为忠诚的唯一证明。"]
+    }
+  },
+  "辛": {
+    core: "辛不断在怪物、罪责、父亲与自动化灾难之间换位，使敌我边界迟迟不能稳定。",
+    readings: {
+      abstract: ["灾难的专名", "辛首先像一个可被辨认和击败的外部敌人。"],
+      prologue: ["摧毁故乡的他者", "城市毁灭把辛固定为绝对外部，却在提达被吞入时留下亲缘性的裂口。"],
+      pilgrimage: ["组织世界的威胁", "辛使路线、禁忌与召唤士制度显得必要，敌人已经成为社会秩序的条件。"],
+      return: ["父亲与铠甲", "杰克特和耶朋·咒的揭示让辛同时成为被困者、保护层与自我复制程序。"],
+      release: ["必须拆除的机制", "战斗目标不再只是杀死怪物，而是阻止新的召唤兽被占据并成为下一层铠甲。"],
+      translation: ["罪的语言陷阱", "Sin把怪物与罪直接同形；シン与辛的转写则保留并重新分配这种神学暗示。"],
+      epilogue: ["不再规定未来的过去", "辛消失后，灾难仍需被记忆，却失去为下一次献祭立法的权力。"]
+    }
+  },
+  "父亲": {
+    core: "父亲既是私人欲望的对象，也是灾难借以进入身体、代际与玩家操作的接口。",
+    readings: {
+      abstract: ["私人关系的缺席", "父亲仍像人物心理背景，尚未显露与世界灾难的结构重叠。"],
+      prologue: ["被怨恨的失踪者", "提达以对杰克特的敌意组织自我，讲述仿佛只需抵达一次迟到的对质。"],
+      pilgrimage: ["竞争性的理想自我", "父亲作为被模仿又被拒绝的尺度，推动提达把胜利想成取代。"],
+      return: ["被世界占据的亲属", "杰克特成为辛，使杀敌与杀父重合，私人创伤无法再与公共灾难分开。"],
+      release: ["不以取代完成的告别", "中断循环要求承认父子关系中的失败，而不是成为更强的父亲。"],
+      translation: ["称谓中的距离", "父、父亲、親父与father携带不同亲疏和男性气质，使冲突在本地化中重新定调。"],
+      epilogue: ["仍有痕迹的离开", "告别没有修复全部伤口，却允许父亲不再作为必须战胜的命令继续存在。"]
+    }
+  },
+  "送行": {
+    core: "送行从安置亡魂的仪式，逐渐转为重新规定死者、生者与统治权关系的政治行动。",
+    readings: {
+      abstract: ["优美的死亡仪式", "水面舞蹈先以美感承接悲伤，仪式内部的权力差异尚未显露。"],
+      prologue: ["叙述的预演", "提达决定把一切说出，也是在为一个尚未抵达的离别寻找形式。"],
+      pilgrimage: ["共同体期待的职责", "优娜替幸存者承担哀恸，同时被要求把亡者纳入唯一正统的离去秩序。"],
+      return: ["选择性执行的规范", "未发送的教团领袖证明仪式并非自然法则：谁必须离去，本身就是权力问题。"],
+      release: ["解除死者的统治权", "送行不等于遗忘，而是拒绝让承诺、职位与爱继续占据生者的未来。"],
+      translation: ["仪式动词的伦理差", "異界送り、sending与送行分别突出目的地、动作和人际告别，无法完全重合。"],
+      epilogue: ["继续关系而不继续占有", "逝者被记住，却不再被要求保持可调用、可复现或永远在场。"]
+    }
+  }
+};
+const motifMeanings = {
+  "水": {
+    core: "水不提供一种总象征；它让身体、仪式、欲望、记忆与死亡在不同深度相遇。",
+    fallback: ["流动的界面", "水把可见表面与不可见深处同时交给观看者。"],
+    roles: [
+      ["异界|送行|亡魂|死者", "仪式表面", "水承托送魂之舞，也把共同体对死亡的秩序化变得可见。"],
+      ["水斗球|比赛|战斗|身体", "身体媒介", "浮力、阻力与方向感让身体先于教义认识史匹拉。"],
+      ["拥抱|爱情|亲密|吻", "欲望镜面", "水暂时消解身体边界，同时预告亲密无法被永久保存。"],
+      ["倒影|镜|观看|镜花水月", "反射界面", "倒影不是原物的次等复制，而是让观看位置本身显形。"],
+      ["比塞德|海岛|南洋|群岛", "生活环境", "海水构成日常与乐园想象，也可能遮住岛屿的战争和劳动史。"],
+      ["梦|札纳尔坎德|故乡", "记忆深处", "水使故乡像仍可抵达，却以深度提示复原欲望的代价。"]
+    ]
+  },
+  "月": {
+    core: "月光以借来的光照亮史匹拉，使记忆、周期与不可抵达之物进入同一观看。",
+    fallback: ["借来的光", "月亮不自足地发光，因此适合承载由他者保存和反射的记忆。"],
+    roles: [
+      ["水|倒影|镜", "水中倒影", "月亮在水面被打散，提醒完整形象依赖不稳定的媒介。"],
+      ["循环|安宁|辛", "周期标记", "月相把重复自然化；文章则追问制度循环为何伪装成自然周期。"],
+      ["梦|远方|故乡", "不可抵达之物", "月亮看似可见却无法占有，给失去的故乡以恰当距离。"]
+    ]
+  },
+  "废墟": {
+    core: "废墟不是等待修复的残次品，而是时间不可逆、档案不完整的物质证词。",
+    fallback: ["历史证词", "缺口使毁灭不能被完美复原抹去。"],
+    roles: [
+      ["原爆|战争|广岛|长崎", "灾难证词", "残存结构迫使受难记忆与战争责任在同一历史场中相遇。"],
+      ["档案|保存|记忆", "档案限度", "废墟保存痕迹，也公开承认无法保存全部生活。"],
+      ["梦城|复原|完整", "拒绝复原", "它以缺损反对把失去之物复制为永远不变的现在。"],
+      ["寺院|神圣|遗迹", "失效的权威", "制度建筑成为残骸时，曾经自然化的神圣秩序重新变得可读。"]
+    ]
+  },
+  "寺院": {
+    core: "寺院在神圣空间、操作接口、合法性机器与记忆装置之间不断换位。",
+    fallback: ["制度空间", "建筑把教义变成身体必须穿过的方向、门槛与权限。"],
+    roles: [
+      ["试炼|机关|幻光球|插槽", "操作接口", "谜题把服从转换成解题满足，使正统秩序通过成功反馈进入身体。"],
+      ["教团|正统|权威|耶朋", "合法性机器", "寺院规定谁能解释灾难、调用力量并进入受保护的内部。"],
+      ["祈之子|召唤|记忆", "记忆存储", "被封存的身体向召唤提供力量，也暴露档案依赖的持续劳动。"],
+      ["朝圣|路线|行路", "具身门槛", "朝圣者以疲劳、解谜和仪式重复学习什么才算合法前进。"]
+    ]
+  },
+  "幻光虫": {
+    core: "幻光虫在灵魂、粒子、数据与未完成关系之间游移，拒绝被固定为单一宗教象征。",
+    fallback: ["未定形的痕迹", "它们让死者既可见又不可占有，使记忆保持流动。"],
+    roles: [
+      ["死者|亡魂|异界|送行", "灵魂残迹", "发光粒子使死亡获得可见形式，却没有证明死者能够被完全解释。"],
+      ["数据|程序|界面|召唤", "信息粒子", "灵魂被系统化为可调用效果时，宗教与技术不再是简单对立。"],
+      ["祈之子|劳动|维持", "被遮蔽的劳动", "梦与召唤的辉光来自持续付出的身体，奇观因此带有生产成本。"],
+      ["游荡|幽灵|痕迹", "未完成关系", "它们不要求复活，而让尚未解决的债务继续打断现在。"]
+    ]
+  },
+  "歌声": {
+    core: "歌声没有纯洁起源；反抗、禁令、收编、祈祷与共同发声在旋律中层层沉积。",
+    fallback: ["共同发声", "歌声使分散身体共享呼吸，却不保证共同体没有排除。"],
+    roles: [
+      ["禁歌|马卡拉尼亚|反抗", "被禁止的遗存", "旋律先以禁令保存另一段历史，权力无法彻底消除它。"],
+      ["耶朋|教团|寺院|祈祷", "制度收编", "反抗旋律被改写为正统圣歌，传统显示为冲突的沉积物。"],
+      ["祈祷之歌|祈りの歌|Hymn", "祈祷接口", "反复旋律让玩家在理解歌词以前，先以听觉参与共同体。"],
+      ["终局|召唤兽|送行", "告别的共同劳动", "歌声不替代失去，而为彼此不能独自完成的送别提供节律。"],
+      ["声音|本地化|语言|版本", "不可完全转译的声纹", "音色、节奏和发音保存字幕无法穷尽的身体差异。"]
+    ]
+  }
 };
 const archiveTensions = {
   "political-theology": "这份档案无法裁定施米特传统是否足以解释东亚宗教政治；欧洲主权概念与天皇制、殖民治理之间仍存在不可抹平的历史差异。",
@@ -89,6 +231,30 @@ function openOneiricArchive(markup) {
   oneiricPanel.querySelector(".oneiric-close").focus();
 }
 
+function phaseForAct(act) {
+  if (act.includes("第一幕")) return "pilgrimage";
+  if (act.includes("第二幕")) return "return";
+  if (act.includes("第三幕")) return "release";
+  if (act.includes("第四幕")) return "translation";
+  if (act.includes("尾声")) return "epilogue";
+  if (act.includes("序曲")) return "prologue";
+  return "abstract";
+}
+
+function symptomReadingFor(key, phase) {
+  const profile = symptomReadings[key];
+  if (!profile) return ["未完成的回返", "后来的语境改变了此前语句现在能够怎样被听见。"];
+  return profile.readings[phase] || profile.readings.abstract;
+}
+
+function motifRoleFor(key, record) {
+  const profile = motifMeanings[key];
+  if (!profile) return ["关系中的变体", "意象不服从单一释义，而在不同场景中改变作用。"];
+  const context = record.section + " " + record.excerpt;
+  const matched = profile.roles.find(([pattern]) => new RegExp(pattern).test(context));
+  return matched ? matched.slice(1) : profile.fallback;
+}
+
 function openSymptomTrace(token) {
   const key = token.dataset.symptom;
   const currentIndex = Number(token.dataset.occurrence || 1) - 1;
@@ -96,47 +262,59 @@ function openSymptomTrace(token) {
   const current = records[currentIndex];
   if (!current) return;
   const prior = records.slice(0, currentIndex);
-  const revision = symptomRevisions[key] || "后来的语境没有恢复一个原始真义；它只改变了此前这句话现在能够怎样被听见。";
+  const profile = symptomReadings[key];
+  const currentReading = symptomReadingFor(key, current.phase);
   const returns = prior.length
-    ? prior.map((record, index) =>
-      '<button class="trace-return" type="button" data-return-target="' + record.id + '" data-afterward="' + escapeArchiveText(revision) + '" aria-label="返回第 ' + String(index + 1) + ' 次出现；事后改写：' + escapeArchiveText(revision) + '">' +
+    ? prior.map((record, index) => {
+      const earlierReading = symptomReadingFor(key, record.phase);
+      const shift = '“' + key + '”由“' + earlierReading[0] + '”折返为“' + currentReading[0] + '”。后来的知识没有取消先前经验，而使两者的冲突同时可见。';
+      return '<button class="trace-return" type="button" data-return-target="' + record.id + '" aria-label="返回第 ' + String(index + 1) + ' 处；从' + escapeArchiveText(earlierReading[0]) + '回看到' + escapeArchiveText(currentReading[0]) + '">' +
       '<span>' + String(index + 1).padStart(2, "0") + ' · ' + escapeArchiveText(record.section) + '</span>' +
       '<p>' + escapeArchiveText(record.excerpt) + '</p>' +
-      '<small class="trace-afterward">事后改写：' + escapeArchiveText(revision) + '</small></button>'
-    ).join("")
-    : '<p class="trace-empty">这是它第一次显现。此刻它还没有可以承认的过去。</p>';
+      '<dl class="trace-layers"><div><dt>当时</dt><dd><b>' + escapeArchiveText(earlierReading[0]) + '</b> · ' + escapeArchiveText(earlierReading[1]) + '</dd></div>' +
+      '<div><dt>后来</dt><dd><b>' + escapeArchiveText(currentReading[0]) + '</b> · ' + escapeArchiveText(currentReading[1]) + '</dd></div>' +
+      '<div><dt>此刻回看</dt><dd>' + escapeArchiveText(shift) + '</dd></div></dl></button>';
+    }).join("")
+    : '<p class="trace-empty">这是它第一次显现。此刻它还没有可以回看的过去；解释会随行路逐渐解锁。</p>';
   openOneiricArchive(
     '<header class="oneiric-head"><p>APRÈS-COUP / RETURN TRACE</p><h2>“' + escapeArchiveText(key) + '”的事后回返</h2></header>' +
-    '<p class="oneiric-lead">第 ' + String(currentIndex + 1) + ' 次出现并不恢复一个藏在开头的答案；后来语境改变了此前语句现在能够意味着什么。</p>' +
-    '<section class="trace-current"><span>当前语境 · ' + escapeArchiveText(current.section) + '</span><p>' + escapeArchiveText(current.excerpt) + '</p></section>' +
+    '<p class="oneiric-lead">' + escapeArchiveText(profile?.core || "后来语境改变了此前语句现在能够意味着什么。") + '</p>' +
+    '<section class="trace-current"><span>当前语境 · ' + escapeArchiveText(narrativePhaseLabels[current.phase] || current.act) + ' · ' + escapeArchiveText(current.section) + '</span>' +
+    '<p>' + escapeArchiveText(current.excerpt) + '</p><strong class="trace-role">' + escapeArchiveText(currentReading[0]) + ' · ' + escapeArchiveText(currentReading[1]) + '</strong></section>' +
     '<section class="trace-history"><h3>此前留下的痕迹</h3>' + returns + '</section>'
   );
 }
 
 function openMotifConstellation(token) {
   const key = token.dataset.motif;
-  const records = motifArchive.get(key) || [];
+  const currentIndex = Number(token.dataset.occurrence || 1) - 1;
+  const archivedRecords = motifArchive.get(key) || [];
+  const records = archivedRecords.slice(0, currentIndex + 1);
   if (!records.length) return;
   const nodes = records.map((record, index) => {
     const angle = -90 + index * (360 / Math.max(records.length, 1));
     const radians = angle * Math.PI / 180;
     const x = 50 + Math.cos(radians) * 38;
     const y = 50 + Math.sin(radians) * 36;
-    return '<button class="constellation-node" type="button" data-return-target="' + record.id + '" ' +
+    const role = motifRoleFor(key, record);
+    return '<button class="constellation-node' + (index === currentIndex ? ' is-current' : '') + '" type="button" data-return-target="' + record.id + '" ' +
       'style="--node-x:' + x.toFixed(2) + '%;--node-y:' + y.toFixed(2) + '%" ' +
-      'aria-label="前往' + escapeArchiveText(record.section) + '中的' + escapeArchiveText(key) + '">' +
+      'aria-label="前往' + escapeArchiveText(record.section) + '中的' + escapeArchiveText(key) + '；作用为' + escapeArchiveText(role[0]) + '"' + (index === currentIndex ? ' aria-current="true"' : '') + '>' +
       '<span>' + String(index + 1).padStart(2, "0") + '</span></button>';
   }).join("");
-  const routes = records.map((record, index) =>
-    '<button class="motif-route" type="button" data-return-target="' + record.id + '">' +
+  const routes = records.map((record, index) => {
+    const role = motifRoleFor(key, record);
+    return '<button class="motif-route' + (index === currentIndex ? ' is-current' : '') + '" type="button" data-return-target="' + record.id + '"' + (index === currentIndex ? ' aria-current="true"' : '') + '>' +
     '<span>' + String(index + 1).padStart(2, "0") + ' · ' + escapeArchiveText(record.section) + '</span>' +
-    '<p>' + escapeArchiveText(record.excerpt) + '</p></button>'
-  ).join("");
+    '<strong class="motif-role">' + escapeArchiveText(role[0]) + '</strong>' +
+    '<p>' + escapeArchiveText(record.excerpt) + '</p><small class="motif-reading">' + escapeArchiveText(role[1]) + '</small></button>';
+  }).join("");
+  const profile = motifMeanings[key];
   openOneiricArchive(
-    '<header class="oneiric-head"><p>JUNGIAN AMPLIFICATION FIELD</p><h2>“' + escapeArchiveText(key) + '”的意象星图</h2></header>' +
-    '<p class="oneiric-lead">' + escapeArchiveText(motifMeanings[key] || "意象不服从单一释义，而在不同场景中组成关系星座。") + '</p>' +
+    '<header class="oneiric-head"><p>MOTIF CONSTELLATION / 意象星图</p><h2>“' + escapeArchiveText(key) + '”的跨场景变体</h2></header>' +
+    '<p class="oneiric-lead">' + escapeArchiveText(profile?.core || "意象不服从单一释义，而在不同场景中组成关系星座。") + ' 这里借用荣格的扩充法，但不把跨文化原型当作最终裁定。</p>' +
     '<div class="motif-constellation"><span class="constellation-core">' + escapeArchiveText(key) + '</span>' + nodes + '</div>' +
-    '<section class="motif-routes"><h3>跨章节变体</h3>' + routes + '</section>'
+    '<section class="motif-routes"><h3>截至此处的场景角色，而非单一象征</h3>' + routes + '</section>'
   );
 }
 
@@ -426,13 +604,27 @@ if (document.body.classList.contains("y2k-pilgrimage")) {
       return "摘要";
     }
 
+    function actForParagraph(paragraph) {
+      let topLevel = paragraph;
+      while (topLevel.parentElement && topLevel.parentElement !== article) topLevel = topLevel.parentElement;
+      let cursor = topLevel.previousElementSibling;
+      while (cursor) {
+        if (cursor.matches("h2")) return cursor.textContent.trim();
+        cursor = cursor.previousElementSibling;
+      }
+      return "摘要";
+    }
+
     function wrapArchiveWords(paragraphs, definitions, className, archive) {
       const combined = paragraphs.map(paragraph => paragraph.textContent).join("");
       const words = Object.keys(definitions).filter(word => combined.split(word).length - 1 >= 2);
       if (!words.length) return;
       const matcher = new RegExp("(" + words.sort((a, b) => b.length - a.length).join("|") + ")", "g");
+      const wrappedSections = new Set();
       paragraphs.forEach(paragraph => {
         const section = sectionForParagraph(paragraph);
+        const act = actForParagraph(paragraph);
+        const phase = phaseForAct(act);
         const excerpt = paragraph.textContent.trim().replace(/\s+/g, " ").slice(0, 118);
         const wrappedInParagraph = new Set();
         const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT, {
@@ -453,7 +645,8 @@ if (document.body.classList.contains("y2k-pilgrimage")) {
             if (match.index > cursor) fragment.append(node.nodeValue.slice(cursor, match.index));
             const word = match[0];
             const records = archive.get(word) || [];
-            if (wrappedInParagraph.has(word) || records.length >= 16) {
+            const sectionKey = word + "::" + section;
+            if (wrappedInParagraph.has(word) || wrappedSections.has(sectionKey) || records.length >= 8) {
               fragment.append(word);
               cursor = match.index + word.length;
               continue;
@@ -468,16 +661,17 @@ if (document.body.classList.contains("y2k-pilgrimage")) {
               token.dataset.occurrence = String(occurrence);
               token.id = "symptom-" + encodeURIComponent(word) + "-" + occurrence;
               token.style.setProperty("--return-depth", Math.min(1, (occurrence - 1) / 5).toFixed(2));
-              token.setAttribute("aria-label", word + "，第 " + occurrence + " 次出现；查看此前语境");
+              token.setAttribute("aria-label", word + "，第 " + occurrence + " 个关键节点，" + narrativePhaseLabels[phase] + "；查看此前语境");
             } else {
               token.dataset.motif = word;
               token.dataset.occurrence = String(occurrence);
               token.id = "motif-" + encodeURIComponent(word) + "-" + occurrence;
               token.setAttribute("aria-label", word + "，第 " + occurrence + " 个意象变体；打开跨章节星图");
             }
-            records.push({ id: token.id, section, excerpt });
+            records.push({ id: token.id, section, act, phase, excerpt });
             archive.set(word, records);
             wrappedInParagraph.add(word);
+            wrappedSections.add(sectionKey);
             fragment.append(token);
             cursor = match.index + word.length;
           }
