@@ -41,29 +41,32 @@ document.querySelectorAll('.sound-threshold').forEach(function(card){
     audio.controls=true;
     audio.preload='metadata';
     audio.playsInline=true;
+    audio.loop=!nextId;
     audio.src=soundMediaUrl(card.dataset.soundId);
     audio.setAttribute('aria-label',firstTitle+'——网易云音乐原生音频播放器');
     status.className='sound-mobile-hint';
-    status.textContent=nextId?'正在载入 '+firstTitle+'；结束后接续《'+nextTitle+'》。':'正在载入 '+firstTitle+'。';
+    status.textContent=nextId?'正在载入 '+firstTitle+'；结束后接续 '+nextTitle+' 并循环播放。':'正在载入 '+firstTitle+'；曲目将自动循环。';
     audio.addEventListener('playing',function(){
       status.classList.remove('is-error');
-      status.textContent=card.dataset.sequenceAdvanced==='true'?'正在接续播放《'+nextTitle+'》。':(nextId?'正在播放 '+firstTitle+'；结束后接续《'+nextTitle+'》。':'正在播放 '+firstTitle+'。');
+      status.textContent=card.dataset.sequenceAdvanced==='true'?'正在循环播放 '+nextTitle+'。':(nextId?'正在播放 '+firstTitle+'；结束后接续 '+nextTitle+' 并循环播放。':'正在循环播放 '+firstTitle+'。');
     });
     audio.addEventListener('ended',function(){
       if(!nextId||card.dataset.sequenceAdvanced==='true'){
-        status.textContent='声音已经沉入水下。';
+        audio.currentTime=0;
+        requestSoundPlay(audio,status,'曲目已经就绪，请点播放键继续循环。');
         return;
       }
       card.dataset.sequenceAdvanced='true';
+      audio.loop=true;
       audio.src=soundMediaUrl(nextId);
-      audio.setAttribute('aria-label','《'+nextTitle+'》——网易云音乐原生音频播放器');
-      status.textContent='接续载入《'+nextTitle+'》。';
+      audio.setAttribute('aria-label',nextTitle+'——网易云音乐原生音频播放器');
+      status.textContent='接续载入 '+nextTitle+'；随后自动循环。';
       audio.load();
-      requestSoundPlay(audio,status,'《'+nextTitle+'》已经就绪，请点播放键继续。');
+      requestSoundPlay(audio,status,nextTitle+' 已经就绪，请点播放键继续。');
     });
     audio.addEventListener('error',function(){
       status.classList.add('is-error');
-      status.textContent='网易云暂未返回'+(card.dataset.sequenceAdvanced==='true'?'《'+nextTitle+'》':'这首音频')+'；可稍后重新浮出水面。';
+      status.textContent='网易云暂未返回'+(card.dataset.sequenceAdvanced==='true'?nextTitle:'这首音频')+'；可稍后重新浮出水面。';
     });
     close.type='button';
     close.className='sound-submerge';
