@@ -4098,6 +4098,12 @@ html.platform-windows .y2k-pilgrimage .article-body button {
 
 
 
+
+
+
+
+
+
 /* reading-transition:start */
 .y2k-pilgrimage .pilgrimage-threshold {
   position: relative;
@@ -4179,6 +4185,12 @@ html.platform-windows .y2k-pilgrimage .article-body button {
   }
 }
 /* reading-transition:end */
+
+
+
+
+
+
 
 
 
@@ -4480,3 +4492,31 @@ html.platform-windows .y2k-pilgrimage .article-body button {
 
 
 
+
+
+
+
+
+
+
+/* final-review-refinements:start */
+.y2k-pilgrimage .article-body > h2.abstract-heading {
+  margin: 0 0 1.5rem;
+  padding: 1.3rem 1.5rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 0;
+  box-shadow: none;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  line-height: 1.4;
+}
+.y2k-pilgrimage .article-body > h2.abstract-heading::before,
+.y2k-pilgrimage .article-body > h2.abstract-heading::after {
+  display: none;
+  content: none;
+}
+.article-body figcaption { font-size: 0.8rem; }
+/* final-review-refinements:end */

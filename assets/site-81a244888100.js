@@ -66,7 +66,7 @@ const symptomReadings = {
     readings: {
       abstract: ["崇高代价", "牺牲仍容易被读成英雄叙事中不可避免的损失。"],
       prologue: ["尚未说出的终点", "旅程已经被死亡规定，却通过倒叙把代价延迟到读者能够承受的时刻。"],
-      pilgrimage: ["被爱的自我奉献", "尤娜的选择是真实的，但共同体只允许她在预设的死亡形式中证明爱。"],
+      pilgrimage: ["被爱的自我奉献", "优娜的选择是真实的，但共同体只允许她在预设的死亡形式中证明爱。"],
       return: ["制度生产的死亡", "当究极召唤的循环被揭露，牺牲由命运重新显现为可以追责的制度选择。"],
       release: ["拒绝制造下一位死者", "中断不要求更纯洁的牺牲，而要求放弃以他人死亡换取确定性的欲望。"],
       translation: ["词语携带的神学差", "sacrifice、犠牲与牺牲把祭献、受害和主动奉献缠在同一个词场中。"],
@@ -79,7 +79,7 @@ const symptomReadings = {
       abstract: ["愿望的容器", "梦先意味着另一种生活仍可想象，维持它的物质与劳动尚不可见。"],
       prologue: ["倒叙的故乡", "梦把已经失去的城市保存为仍在发声的第一人称记忆。"],
       pilgrimage: ["朝圣者的私人未来", "人物各自把尚未实现的生活投向道路尽头，却不知道终点已被制度封闭。"],
-      return: ["不能停机的档案", "梦城真相使愿望显出基础设施：祈之子的持续召唤替完美故乡支付时间。"],
+      return: ["不能停机的档案", "梦城真相使愿望显出基础设施：祈祷者的持续召唤替完美故乡支付时间。"],
       release: ["允许梦结束", "醒来不是揭穿虚假，而是承认真实关系也不能要求他者永远维持自身存在。"],
       translation: ["版本间移动的幻想", "梦在语言与声音轨之间改变情感温度，任何版本都不能恢复一个无媒介的原梦。"],
       epilogue: ["可被记住而不必复原", "消逝的梦仍能参与未来，但不再以复制原样为忠诚的唯一证明。"]
@@ -115,7 +115,7 @@ const symptomReadings = {
       abstract: ["优美的死亡仪式", "水面舞蹈先以美感承接悲伤，仪式内部的权力差异尚未显露。"],
       prologue: ["叙述的预演", "提达决定把一切说出，也是在为一个尚未抵达的离别寻找形式。"],
       pilgrimage: ["共同体期待的职责", "优娜替幸存者承担哀恸，同时被要求把亡者纳入唯一正统的离去秩序。"],
-      return: ["选择性执行的规范", "未发送的教团领袖证明仪式并非自然法则：谁必须离去，本身就是权力问题。"],
+      return: ["选择性执行的规范", "尚未被送行的教团领袖证明仪式并非自然法则：谁必须离去，本身就是权力问题。"],
       release: ["解除死者的统治权", "送行不等于遗忘，而是拒绝让承诺、职位与爱继续占据生者的未来。"],
       translation: ["仪式动词的伦理差", "異界送り、sending与送行分别突出目的地、动作和人际告别，无法完全重合。"],
       epilogue: ["继续关系而不继续占有", "逝者被记住，却不再被要求保持可调用、可复现或永远在场。"]
@@ -160,7 +160,7 @@ const motifMeanings = {
     roles: [
       ["试炼|机关|幻光球|插槽", "操作接口", "谜题把服从转换成解题满足，使正统秩序通过成功反馈进入身体。"],
       ["教团|正统|权威|耶朋", "合法性机器", "寺院规定谁能解释灾难、调用力量并进入受保护的内部。"],
-      ["祈之子|召唤|记忆", "记忆存储", "被封存的身体向召唤提供力量，也暴露档案依赖的持续劳动。"],
+      ["祈祷者|召唤|记忆", "记忆存储", "被封存的身体向召唤提供力量，也暴露档案依赖的持续劳动。"],
       ["朝圣|路线|行路", "具身门槛", "朝圣者以疲劳、解谜和仪式重复学习什么才算合法前进。"]
     ]
   },
@@ -170,7 +170,7 @@ const motifMeanings = {
     roles: [
       ["死者|亡魂|异界|送行", "灵魂残迹", "发光粒子使死亡获得可见形式，却没有证明死者能够被完全解释。"],
       ["数据|程序|界面|召唤", "信息粒子", "灵魂被系统化为可调用效果时，宗教与技术不再是简单对立。"],
-      ["祈之子|劳动|维持", "被遮蔽的劳动", "梦与召唤的辉光来自持续付出的身体，奇观因此带有生产成本。"],
+      ["祈祷者|劳动|维持", "被遮蔽的劳动", "梦与召唤的辉光来自持续付出的身体，奇观因此带有生产成本。"],
       ["游荡|幽灵|痕迹", "未完成关系", "它们不要求复活，而让尚未解决的债务继续打断现在。"]
     ]
   },
@@ -766,6 +766,7 @@ if (document.body.classList.contains("y2k-pilgrimage")) {
               token.dataset.recordId = token.id;
               token.setAttribute("aria-label", word + "，第 " + occurrence + " 个意象变体；打开跨章节星图");
             }
+            if (occurrence > 1) token.tabIndex = -1;
             records.push({ id: token.id, section, act, phase, excerpt, source: "text" });
             archive.set(word, records);
             wrappedInParagraph.add(word);
@@ -816,6 +817,7 @@ if (document.body.classList.contains("y2k-pilgrimage")) {
         token.id = id;
         token.dataset.motif = word;
         token.dataset.recordId = id;
+        token.tabIndex = -1;
         token.setAttribute("aria-label", word + "，图像与图注中的意象变体；打开跨媒介星图");
         records.push({ id, section, act, phase, excerpt: context.slice(0, 118), source: "image" });
         motifArchive.set(word, records);
@@ -846,7 +848,7 @@ if (document.body.classList.contains("y2k-pilgrimage")) {
     ];
     for (const child of article.children) {
       if (child === notesHeading) break;
-      if (child.tagName === "H2") {
+      if (child.tagName === "H2" && !child.classList.contains("abstract-heading")) {
         dreamAct += 1;
         child.classList.add("dream-threshold");
         child.dataset.dreamAct = String(dreamAct);
